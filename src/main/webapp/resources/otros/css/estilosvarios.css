@@ -1,0 +1,13 @@
+body.exception-body.error-page {
+    background: url("../img/background.jpg");
+}
+
+body.exception-body .exception-bottom .exception-wrapper button {
+    width: 25%;
+}
+
+body.exception-body .ui-button {
+    background-color: #f58025;
+    border-color: #f58025;
+    color: white;
+}

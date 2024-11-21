@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/theme.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/primeicons/primeicons.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/components.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/css/layout-light.css" />
+        <title>Datos Personales</title>
+        <link rel="icon" type="image/x-icon" sizes="16x16" href="https://bhd.com.do/favicon.ico" />
+    </h:head>
+    <h:body class="login-body">
+        <p:growl id="msj"/>
+        <h:form id="regCliente">
+            <div class="login-wrapper">
+                <div class="login-panel">
+                    <a href="./../../login.xhtml" class="logo">
+                        <img src="https://static.bhd.com.do/bhd_1_35fc248886_c7474096c5.png" alt="logo" />
+                    </a>
+                    <div class="login-form">
+                        <h1>Registro de Usuario</h1>
+                        <p>Completa los datos personales para registrar tu cuenta.</p>
+                        <p:fieldset legend="Datos personales" toggleable="false" styleClass="ui-fieldset ui-widget ui-widget-content ui-corner-all">
+                            <div class="ui-fluid formgrid grid">
+                                <div class="field col-12 md:col-6">
+                                    <p:outputLabel for="@next" value="Tipo Producto" />
+                                    <p:selectOneMenu id="cmbTipoPro" value="#{usuariosMB.registroUsuarioDto.idTipoProducto}" required="true" styleClass="ui-inputfield ui-inputtext">
+                                        <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItems value="#{usuariosMB.listaTipoProducto}" var="lsTiPro"
+                                                       itemLabel="#{lsTiPro.descripcion}" itemValue="#{lsTiPro.idTipoProducto}"/>
+                                        <p:ajax listener="#{usuariosMB.cargarTipoCuenta()}" process=":regCliente:cmbTipoPro" update=":regCliente:cmbTipoCta" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <p:outputLabel for="@next" value="Tipo Cuenta"/>
+                                    <p:selectOneMenu id="cmbTipoCta" value="#{usuariosMB.registroUsuarioDto.idTipoCuenta}" styleClass="ui-inputfield ui-inputtext">
+                                        <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true"/>
+                                        <f:selectItems value="#{usuariosMB.listaTipoCuenta}" var="lsTiCta"
+                                                       itemLabel="#{lsTiCta.descripcion}" itemValue="#{lsTiCta.idTipoCuenta}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <p:outputLabel for="@next" value="Número de Producto" />
+                                    <p:inputMask id="txtNumProducto" value="#{usuariosMB.registroUsuarioDto.numeroProducto}" mask="9[9999999999999999999999999]"
+                                                 validateMask="false" required="true" styleClass="ui-inputfield ui-inputtext"/>
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <p:outputLabel for="@next" value="Documento de Identidad" />
+                                    <p:inputMask id="txtDocIdentidad" value="#{usuariosMB.registroUsuarioDto.documentoIdentidad}" mask="99999999-9" required="true" styleClass="ui-inputfield ui-inputtext"/>
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <p:outputLabel for="@next" value="Nombre de Usuario" />
+                                    <p:inputText id="txtUsuario" value="#{usuariosMB.registroUsuarioDto.usuario}" required="true" styleClass="ui-inputfield ui-inputtext"/>
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <p:outputLabel for="@next" value="Contraseña" />
+                                    <p:password id="txtContrasenia" value="#{usuariosMB.registroUsuarioDto.clave}" required="true" styleClass="ui-password ui-inputfield">
+                                        <f:validateLength minimum="8" maximum="30" />
+                                    </p:password>
+                                </div>
+                            </div>
+                        </p:fieldset>
+                        <br/>
+                        <p:commandButton value="Registrar" styleClass="ui-button ui-widget ui-state-default ui-corner-all" actionListener="#{usuariosMB.crearCuentaUsuario()}" update=":msj :regCliente" />
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>

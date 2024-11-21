@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/templateEjecutivo.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{validarMB.validarSesionEjecutivo()}" />
+    </f:metadata>
+
+    <ui:define name="title">Usuarios con Banca</ui:define>
+
+    <ui:define name="content">
+        <div class="card crud-demo">
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true" />
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Generar reporte" icon="pi pi-upload" styleClass="ui-button-help" ajax="false" 
+                                         rendered="#{usuariosMB.listaUsuarios.size() > 0}">
+                            <p:dataExporter type="pdf" target="dt-usuariosBanca" fileName="Usuarios_Banca_BHD" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-usuariosBanca" widgetVar="dtUsuariosBa" var="usBa" value="#{usuariosMB.listaUsuarios}"
+                             reflow="true" styleClass="usuariosBa-table" rowKey="#{usBa.idUsuario}" paginator="true" 
+                             rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="usuariosBa-table-header">
+                            <span style="font-weight: bold">Información de usuarios con banca</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtUsuariosBa').filter()" placeholder="Buscar" />
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                    <p:column headerText="Código" sortBy="#{usBa.idUsuario}" filterBy="#{usBa.idUsuario}">
+                        <h:outputText value="#{usBa.idUsuario}" />
+                    </p:column>
+                    <p:column headerText="Nombre de usuario" sortBy="#{usBa.usuario}" filterBy="#{usBa.usuario}">
+                        <h:outputText value="#{usBa.usuario}" />
+                    </p:column>
+                    <p:column headerText="Cliente" sortBy="#{usBa.clientes.nombres}" filterBy="#{usBa.clientes.nombres}">
+                        <h:outputText value="#{usBa.clientes.nombres} #{usBa.clientes.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Estado" sortBy="#{usBa.estado ? 'Activo' : 'Inactivo'}" filterBy="#{usBa.estado ? 'Activo' : 'Inactivo'}">
+                        <h:outputText value="#{usBa.estado ? 'Activo' : 'Inactivo'}" />
+                    </p:column>
+                    <p:column headerText="Fecha de creación" sortBy="#{usBa.fechaCreacion}" filterBy="#{usBa.fechaCreacion}">
+                        <h:outputText value="#{usBa.fechaCreacion}">
+                            <f:convertDateTime type="date" timeZone="UTC" pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Acciones" exportable="false">
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:usuarioBa-content"
+                                         oncomplete="PF('usuarioBaDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this">
+                            <f:setPropertyActionListener value="#{usBa}" target="#{usuariosMB.usuarios}" />
+                            <p:resetInput target=":dialogs:usuarioBa-content" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog header="Datos de banca digital" showEffect="fade" modal="true" widgetVar="usuarioBaDialog"
+                          responsive="true">
+                    <p:outputPanel id="usuarioBa-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty usuariosMB.usuarios}">
+                            <div class="field">
+                                <p:outputLabel for="txtUsuarioBa">Nombre de usuario</p:outputLabel>
+                                <p:inputText id="txtUsuarioBa" value="#{usuariosMB.usuarios.usuario}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="cmbEstado">Estado</p:outputLabel>
+                                <p:selectOneMenu id="cmbEstado" value="#{usuariosMB.usuarios.estado}" required="true">
+                                    <f:selectItem itemLabel="Activo" itemValue="true" />
+                                    <f:selectItem itemLabel="Inactivo" itemValue="false" />
+                                </p:selectOneMenu>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{usuariosMB.modificarUsuario()}"
+                                         update="usuarioBa-content" process="usuarioBa-content @this" />
+                        <p:commandButton value="Salir" icon="pi pi-times" onclick="PF('usuarioBaDialog').hide()"
+                                         class="ui-button-secondary" type="button" />
+                    </f:facet>
+                </p:dialog>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

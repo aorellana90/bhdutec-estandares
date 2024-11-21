@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/templateEjecutivo.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{validarMB.validarSesionEjecutivo()}" />
+    </f:metadata>
+
+    <ui:define name="title">Clientes</ui:define>
+
+    <ui:define name="content">
+        <div class="card crud-demo">
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true" />
+
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="Nuevo registro" icon="pi pi-plus" actionListener="#{clientesMB.limpiarDatos()}"
+                                         update=":dialogs:cliente-content" oncomplete="PF('clienteDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:cliente-content" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Generar reporte" icon="pi pi-upload" styleClass="ui-button-help" ajax="false" 
+                                         rendered="#{clientesMB.listaClientes.size() > 0}">
+                            <p:dataExporter type="pdf" target="dt-clientes" fileName="Clientes_BHD" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-clientes" widgetVar="dtClientes" var="cli" value="#{clientesMB.listaClientes}"
+                             reflow="true" styleClass="clientes-table" rowKey="#{cli.idCliente}" paginator="true" 
+                             rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="clientes-table-header">
+                            <span style="font-weight: bold">Información de clientes</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtClientes').filter()" placeholder="Buscar" />
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                    <p:column headerText="Código" sortBy="#{cli.idCliente}" filterBy="#{cli.idCliente}">
+                        <h:outputText value="#{cli.idCliente}" />
+                    </p:column>
+                    <p:column headerText="Nombre" sortBy="#{cli.nombres}" filterBy="#{cli.nombres}">
+                        <h:outputText value="#{cli.nombres} #{cli.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Documento identidad" sortBy="#{cli.documentoIdentidad}" filterBy="#{cli.documentoIdentidad}">
+                        <h:outputText value="#{cli.documentoIdentidad}" />
+                    </p:column>
+                    <p:column headerText="Telefono" sortBy="#{cli.telefono}" filterBy="#{cli.telefono}">
+                        <h:outputText value="#{cli.telefono}" />
+                    </p:column>
+                    <p:column headerText="Correo" sortBy="#{cli.correo}" filterBy="#{cli.correo}">
+                        <h:outputText value="#{cli.correo}" />
+                    </p:column>
+                    <p:column headerText="Dirección" sortBy="#{cli.direccion}" filterBy="#{cli.direccion}">
+                        <h:outputText value="#{cli.direccion}" />
+                    </p:column>
+                    <p:column headerText="Acciones" exportable="false">
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:cliente-content"
+                                         oncomplete="PF('clienteDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this">
+                            <f:setPropertyActionListener value="#{cli}" target="#{clientesMB.clientes}" />
+                            <p:resetInput target=":dialogs:cliente-content" />
+                        </p:commandButton>
+                        <p:commandButton class="ui-button-danger rounded-button" icon="pi pi-trash"
+                                         process="@this"
+                                         oncomplete="PF('eliminarCliDialog').show()">
+                            <f:setPropertyActionListener value="#{cli}" target="#{clientesMB.clientes}" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog header="Datos Personales" showEffect="fade" modal="true" widgetVar="clienteDialog"
+                          responsive="true">
+                    <p:outputPanel id="cliente-content" class="ui-fluid">
+                        <p:outputPanel rendered="#{not empty clientesMB.clientes}">
+                            <div class="field">
+                                <p:outputLabel for="txtNombres">Nombres</p:outputLabel>
+                                <p:inputText id="txtNombres" value="#{clientesMB.clientes.nombres}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="txtApellidos">Apellidos</p:outputLabel>
+                                <p:inputText id="txtApellidos" value="#{clientesMB.clientes.apellidos}" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="txtDocId">Documento de identidad</p:outputLabel>
+                                <p:inputMask id="txtDocId" value="#{clientesMB.clientes.documentoIdentidad}" mask="99999999-9" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="txtTelefono">Telefono</p:outputLabel>
+                                <p:inputMask id="txtTelefono" value="#{clientesMB.clientes.telefono}" mask="9999-9999" required="true" />
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="txtCorreo">Correo electrónico</p:outputLabel>
+                                <p:inputText id="txtCorreo" value="#{clientesMB.clientes.correo}" required="true" >
+                                    <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                </p:inputText>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="txtDireccion">Dirección</p:outputLabel>
+                                <p:inputText id="txtDireccion" value="#{clientesMB.clientes.direccion}" required="true" />
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check" actionListener="#{clientesMB.registrarCliente()}"
+                                         update="cliente-content" process="cliente-content @this" />
+                        <p:commandButton value="Salir" icon="pi pi-times" onclick="PF('clienteDialog').hide()"
+                                         class="ui-button-secondary" type="button" />
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="eliminarCliDialog" showEffect="fade" width="300"
+                                 message="¿Está seguro de eliminar?" header="Alerta" severity="warn">
+                    <p:commandButton value="Si" icon="pi pi-check" actionListener="#{clientesMB.eliminarCliente()}"
+                                     process="@this" update=":form"
+                                     oncomplete="PF('eliminarCliDialog').hide()" />
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('eliminarCliDialog').hide()" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

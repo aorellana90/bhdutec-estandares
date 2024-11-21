@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/theme.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/primeicons/primeicons.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/components.css" />
+        <script type="text/javascript" src="#{request.contextPath}/faces/resources/jquery/jquery.js"></script>
+        <script type="text/javascript" src="#{request.contextPath}/faces/resources/core.js"></script>
+        <script type="text/javascript" src="#{request.contextPath}/faces/resources/components.js"></script>
+        <script type="text/javascript" src="#{request.contextPath}/faces/resources/jquery/jquery-plugins.js"></script>
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/css/layout-light.css" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/css/primeicons.css" />
+        <title>Inicio de Sesión Ejecutivos</title>
+        <link rel="icon" type="image/x-icon" sizes="16x16" href="https://bhd.com.do/favicon.ico" />
+        <link type="text/css" rel="stylesheet" href="#{request.contextPath}/faces/resources/otros/css/loginEjecutivo.css" />
+    </h:head>
+    <h:body class="login-body">
+        <p:growl id="msj"/>
+        <h:form id="frmLoginEje">
+            <div class="login-wrapper">
+                <div class="login-panel"><a href="#" class="logo"><img id="j_idt8"
+                                                                       src="https://static.bhd.com.do/bhd_1_35fc248886_c7474096c5.png" alt="logo"
+                                                                       ismap="false" /></a>
+                    <div class="login-form">
+                        <h1>Ingreso Ejecutivos</h1>
+                        <p>Ingresa tus credenciales para acceder</p>
+                        <p:inputText id="txtUser" styleClass="ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all" required="true" placeholder="Usuario" value="#{ejecutivoUsuariosMB.ejecutivoUsuarios.usuario}"/>
+                        <p:password id="txtPass" styleClass="ui-password ui-inputfield ui-widget ui-state-default ui-corner-all" required="true" placeholder="Contraseña" value="#{ejecutivoUsuariosMB.ejecutivoUsuarios.clave}"/>
+                        <p:commandButton value="INGRESAR" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" icon="ui-icon-key" action="#{ejecutivoUsuariosMB.validarEjecutivo()}" 
+                                         update=":msj :frmLoginEje" />
+                        <br/>
+                        <br/>
+                        <p></p>
+                    </div>
+                    <p>¿Problemas para iniciar? <a href="#">Recupera tu contraseña aquí</a></p>
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>
+
